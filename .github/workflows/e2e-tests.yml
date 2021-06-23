@@ -1,0 +1,26 @@
+name: e2e tests
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    name: Run e2e tests
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: true
+      - run: npm install
+        working-directory: tests
+      - run: npx playwright install
+        working-directory: tests
+      - run: npx playwright test .
+        working-directory: tests
+      - uses: actions/upload-artifact@v2
+        if: ${{ always() }}
+        with:
+          name: test-results
+          path: tests/test-results
